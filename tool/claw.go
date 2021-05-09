@@ -44,15 +44,6 @@ func ProcessSong(song string) string {
 
 func clawSong(song string) bool {
 
-	// 存储文件名
-	fName := model.ResourceDir + "/" + song + ".txt"
-	file, err := os.Create(fName)
-	if err != nil {
-		log.Fatalf("创建文件失败 %q: %s\n", fName, err)
-		return false
-	}
-	defer file.Close()
-
 	// 起始Url
 	startUrl := "https://noobnotes.net/" + song + "?solfege=false"
 
@@ -67,8 +58,11 @@ func clawSong(song string) bool {
 	//})
 
 	// 异常处理
+	var result string
 	collector.OnError(func(response *colly.Response, err error) {
 		log.Println(err.Error())
+		fmt.Println("test")
+		result = ""
 	})
 
 	collector.OnRequest(func(request *colly.Request) {
@@ -76,7 +70,6 @@ func clawSong(song string) bool {
 	})
 
 	// 解析列表
-	var result string
 	collector.OnHTML("body", func(element *colly.HTMLElement) {
 		selection := element.DOM.Find("div.post-content")
 		// 依次遍历所有的p节点
@@ -91,12 +84,24 @@ func clawSong(song string) bool {
 	})
 	// 起始入口
 	collector.Visit(startUrl)
-	_, err = file.WriteString(result)
-	if err != nil {
-		panic(err)
+	if result != "" {
+		// 存储文件名
+		fName := model.ResourceDir + "/" + song + ".txt"
+		file, err := os.Create(fName)
+		if err != nil {
+			log.Fatalf("创建文件失败 %q: %s\n", fName, err)
+			return false
+		}
+		defer file.Close()
+		_, err = file.WriteString(result)
+		if err != nil {
+			panic(err)
+			return false
+		}
+		return true
+	} else {
 		return false
 	}
-	return true
 }
 func split(r rune) bool {
 	return r == ' ' || r == '-' || r == '’'
