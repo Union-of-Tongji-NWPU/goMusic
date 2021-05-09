@@ -43,7 +43,7 @@ func InitGame(sheetFiles []string) {
 	for i := range TouchNoteList {
 		TouchNoteList[i].Width = model.TOUCH_BLOCK_WIDTH
 		TouchNoteList[i].Height = model.TOUCH_BLOCK_HEIGHT
-		TouchNoteList[i].X = float32(model.LLEFT_MARGIN + i*(model.TOUCH_BLOCK_WIDTH+model.MARGIN_BETWEEN_LINE))
+		TouchNoteList[i].X = float32(model.LEFT_MARGIN + i*(model.TOUCH_BLOCK_WIDTH+model.MARGIN_BETWEEN_LINE))
 		TouchNoteList[i].Y = model.SCREEN_HEIGHT - model.TOUCH_BLOCK_HEIGHT - model.TOUCH_BLOCK_MARGIN_BOTTOM
 		TouchNoteList[i].Color = model.TOUCH_BLOCK_BAD_COLOR
 		TouchNoteList[i].Key = int32(model.KeyboardKey[i])
@@ -75,7 +75,7 @@ func generateNextNote() {
 	for minHeight > 0 || minHeight >= -model.MUSIC_NOTE_HEIGHT {
 		selectLine := rand.Intn(model.LINE)
 		musicNote := model.MusicNote{
-			X:      float32(model.LLEFT_MARGIN + selectLine*(model.LINE_WIDTH+model.MARGIN_BETWEEN_LINE)),
+			X:      float32(model.LEFT_MARGIN + selectLine*(model.LINE_WIDTH+model.MARGIN_BETWEEN_LINE)),
 			Y:      getYOfNote(minHeight),
 			Width:  model.MUSIC_NOTE_WIDTH,
 			Height: model.MUSIC_NOTE_HEIGHT,
@@ -196,16 +196,16 @@ func addScore() {
 	}
 }
 
-func speed()float32{
+func speed() float32 {
 
-		return float32(model.INIT_MUSIC_NOTE_SPEED + (FrameCount / 3000.0))
+	return float32(model.INIT_MUSIC_NOTE_SPEED + (FrameCount / 3000.0))
 }
 
-func updateNoteY(){
-	for i := range MusicNoteList{
+func updateNoteY() {
+	for i := range MusicNoteList {
 		node := new(model.DoubleNode)
 		node = MusicNoteList[i].Head
-		for node != nil{
+		for node != nil {
 			musicNote := node.Data.(model.MusicNote)
 			musicNote.Y += speed()
 			node = node.Prev
@@ -219,4 +219,67 @@ func FlushGame() {
 	addScore()
 	updateNoteY()
 	FrameCount++
+}
+
+func DrawGame() {
+	rl.BeginDrawing()
+	rl.ClearBackground(rl.RayWhite)
+
+	// --- all lines' sides ---
+	for line := 0; line < model.LINE; line++ {
+		// left side
+		rl.DrawLineEx(
+			rl.Vector2{
+				X: float32(model.LEFT_MARGIN + (line * model.LINE_WIDTH) + (line * model.MARGIN_BETWEEN_LINE))},
+			rl.Vector2{
+				X: float32(model.LEFT_MARGIN + (line * model.LINE_WIDTH) + (line * model.MARGIN_BETWEEN_LINE)),
+				Y: model.SCREEN_HEIGHT - model.TOUCH_BLOCK_MARGIN_BOTTOM,
+			},
+			model.SIDE_LINE_WIDTH, model.SIDE_LINE_COLOR)
+		// right side
+		rl.DrawLineEx(
+			rl.Vector2{
+				X: float32(model.LEFT_MARGIN + model.LINE_WIDTH + (line * model.LINE_WIDTH) + (line * model.MARGIN_BETWEEN_LINE))},
+			rl.Vector2{
+				X: float32(model.LEFT_MARGIN + model.LINE_WIDTH + (line * model.LINE_WIDTH) + (line * model.MARGIN_BETWEEN_LINE)),
+				Y: model.SCREEN_HEIGHT - model.TOUCH_BLOCK_MARGIN_BOTTOM,
+			},
+			model.SIDE_LINE_WIDTH, model.SIDE_LINE_COLOR)
+	}
+	// --- music nodes ---
+	for line := 0; line < model.LINE; line++ {
+		//TODO
+		//for node := music_note_lists[line].head; node != NULL; node = node->prev {
+		//	rl.DrawRectangle(((MusicNote*)node->data)->x, ((MusicNote*)node->data)->y, ((MusicNote*)node->data)->width,
+		//		((MusicNote*)node->data)->height, ((MusicNote*)node->data)->color);
+		//}
+	}
+
+	// --- touch blocks ---
+	for line := 0; line < model.LINE; line++ {
+		//TODO
+		//rl.DrawRectangle(touch_blocks[line].x, touch_blocks[line].y, touch_blocks[line].width, touch_blocks[line].height,
+		//	touch_blocks[line].color)
+		//
+		//// text on touch block
+		//text := touch_blocks[line].key
+		//rl.DrawText(text, touch_blocks[line].x+TOUCH_BLOCK_FONT_SIZE/2.0,
+		//	touch_blocks[line].y+model.TOUCH_BLOCK_FONT_SIZE/2.0, model.TOUCH_BLOCK_FONT_SIZE, model.TOUCH_BLOCK_FONT_COLOR)
+	}
+
+	// --- text animations ---
+	//TODO
+	//for node := animation_texts.head; node != NULL; node = node->prev {
+	//	textBox := (model.TextBox)node->data;
+	//	rl.DrawText(textBox->text, textBox->x, textBox->y, textBox->fontsize, textBox->fontcolor);
+	//}
+
+	// --- text of upper-left corner ---
+	rl.DrawText(fmt.Sprintf("SCORE: %d", score), model.UI_MARGIN, model.UI_MARGIN, model.UI_FONT_SIZE, model.LIGHTGRAY)
+	rl.DrawText(fmt.Sprintf("MISS: %d", miss), model.UI_MARGIN, model.UI_MARGIN+model.UI_FONT_SIZE, model.UI_FONT_SIZE, model.UI_FONT_COLOR)
+	rl.DrawText(fmt.Sprintf("SPEED: %.1f", speed_now()), model.UI_MARGIN, model.UI_MARGIN+model.UI_FONT_SIZE*2, model.UI_FONT_SIZE,
+		model.UI_FONT_COLOR)
+
+	rl.EndDrawing()
+
 }
