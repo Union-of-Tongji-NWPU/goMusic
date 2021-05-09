@@ -411,6 +411,14 @@ func DrawSongBox() {
 		if rl.IsKeyPressed(rl.KeyBackspace) {
 			searchString = searchString[:len(searchString)-1]
 		}
+		if rl.IsKeyPressed(rl.KeyEnter) {
+			if GetSong(searchString) {
+				InitGame([]string{ProcessSong(searchString)})
+				CurrentScreen = InGAME
+			} else {
+				rl.DrawText("can't find", 0.8*model.SCREEN_WIDTH, 10, 24, rl.Red)
+			}
+		}
 	} else {
 		textColor = rl.DarkGray
 	}
