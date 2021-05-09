@@ -10,6 +10,7 @@ package tool
 import (
 	"fmt"
 	rl "github.com/gen2brain/raylib-go/raylib"
+	"io/ioutil"
 	"math"
 	"math/rand"
 	"strings"
@@ -41,11 +42,13 @@ const ChooseCredit = 2
 
 func UpdateDrawFrame() {
 	switch CurrentScreen {
-	case 0:
+	case Title:
 		DrawMenu()
-	case 1:
+	case InGAME:
 		FlushGame()
 		DrawGame()
+	case SongBox:
+		DrawSongBox()
 	}
 }
 
@@ -354,8 +357,6 @@ func DrawMenu() {
 		OptionSelect--
 	}
 
-	println(OptionSelect)
-
 	if OptionSelect < 0 {
 		OptionSelect = 0
 	}
@@ -365,13 +366,40 @@ func DrawMenu() {
 
 	if rl.IsKeyPressed(rl.KeyEnter) {
 		switch OptionSelect {
-		case 0:
+		case ChooseStartGame:
 			CurrentScreen = InGAME
+		case ChooseMusicBox:
+			CurrentScreen = SongBox
 		}
 	}
 
 	rl.EndDrawing()
 
+}
+
+var CurrentMusicName = ""
+var CurrentChooseMusicIndex = 0
+
+func DrawSongBox() {
+	files, _ := ioutil.ReadDir("./sheet")
+	rl.BeginDrawing()
+	rl.ClearBackground(rl.RayWhite)
+
+	for idx, f := range files {
+		if idx == CurrentChooseMusicIndex {
+			rl.DrawText(f.Name(), 100, int32(100+(idx*30)), 24, rl.Red)
+		} else {
+			rl.DrawText(f.Name(), 100, int32(100+(idx*30)), 24, model.TOUCH_BLOCK_FONT_COLOR)
+		}
+	}
+
+	if rl.IsKeyPressed(rl.KeyDown) && CurrentChooseMusicIndex < len(files)-1 {
+		CurrentChooseMusicIndex++
+	} else if rl.IsKeyPressed(rl.KeyUp) && CurrentChooseMusicIndex > 0 {
+		CurrentChooseMusicIndex--
+	}
+
+	rl.EndDrawing()
 }
 
 func DrawGame() {
