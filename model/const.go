@@ -53,8 +53,21 @@ const LEFT_MARGIN = (SCREEN_WIDTH - (LINE_WIDTH * LINE) - (MARGIN_BETWEEN_LINE *
 
 const RIGHT_MARGIN = (SCREEN_WIDTH - (LINE_WIDTH * LINE) - (MARGIN_BETWEEN_LINE * (LINE - 1))) / 2
 
-//KEY_A               = 65,
-//KEY_B               = 66,
-//KEY_C               = 67,
-//KEY_D               = 68,
-var KeyboardKey = [5]int{65, 66, 67, 68}
+const KeyA = 65
+const KeyB = 66
+const KeyC = 67
+const KeyD = 68
+
+var KeyboardKey = [5]int32{KeyA, KeyB, KeyC, KeyD}
+
+const XboxY = 5
+const XboxB = 6
+const XboxA = 7
+const XboxX = 8
+
+var GamePadXboxKey = map[int32]int32{
+	KeyA: XboxX,
+	KeyB: XboxY,
+	KeyC: XboxA,
+	KeyD: XboxB,
+}

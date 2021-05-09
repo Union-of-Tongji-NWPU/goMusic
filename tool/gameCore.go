@@ -12,6 +12,7 @@ import (
 	rl "github.com/gen2brain/raylib-go/raylib"
 	"math"
 	"math/rand"
+	"strings"
 
 	"awesomeProject1/model"
 )
@@ -50,7 +51,7 @@ func InitGame(sheetFiles []string) {
 		TouchNoteList[i].X = float32(model.LEFT_MARGIN + i*(model.TOUCH_BLOCK_WIDTH+model.MARGIN_BETWEEN_LINE))
 		TouchNoteList[i].Y = model.SCREEN_HEIGHT - model.TOUCH_BLOCK_HEIGHT - model.TOUCH_BLOCK_MARGIN_BOTTOM
 		TouchNoteList[i].Color = model.TOUCH_BLOCK_BAD_COLOR
-		TouchNoteList[i].Key = int32(model.KeyboardKey[i])
+		TouchNoteList[i].Key = model.KeyboardKey[i]
 	}
 }
 
@@ -59,7 +60,7 @@ func getYOfNote(minHeight float32) float32 {
 	if minHeight > 0 {
 		return -model.MUSIC_NOTE_HEIGHT
 	} else {
-		return (minHeight - model.MUSIC_NOTE_HEIGHT)
+		return minHeight - model.MUSIC_NOTE_HEIGHT
 	}
 }
 func generateNextNote() {
@@ -151,7 +152,7 @@ func addScore() {
 			Width:  TouchNoteList[i].Width,
 			Height: TouchNoteList[i].Height,
 		}
-		if rl.IsKeyPressed(TouchNoteList[i].Key) {
+		if rl.IsKeyPressed(TouchNoteList[i].Key) || judgeGamePadPressed(TouchNoteList[i].Key) {
 			bingoSuccess := false
 			scoreIncr := 0
 			node := new(model.DoubleNode)
@@ -216,8 +217,21 @@ func addScore() {
 	}
 }
 
-func speed() float32 {
+func judgeGamePadPressed(key int32) bool {
+	if rl.IsGamepadAvailable(rl.GamepadPlayer1) {
+		//目前只支持Xbox手柄
+		if strings.Contains(rl.GetGamepadName(rl.GamepadPlayer1), "Xbox") {
+			if rl.IsGamepadButtonPressed(rl.GamepadPlayer1, model.GamePadXboxKey[key]) {
+				return true
+			}
+		} else {
+			return false
+		}
+	}
+	return false
+}
 
+func speed() float32 {
 	return float32(model.INIT_MUSIC_NOTE_SPEED + (FrameCount / 3000.0))
 }
 
@@ -250,6 +264,12 @@ func checkFrameAction() {
 }
 
 func FlushGame() {
+	//if rl.GetGamepadButtonPressed() != -1 {
+	//	fmt.Println(rl.GetGamepadButtonPressed())
+	//}
+	//if rl.IsGamepadButtonPressed(0, rl.GamepadXboxButtonA) || rl.IsGamepadButtonPressed(0, rl.GamepadXboxButtonX) || rl.IsGamepadButtonPressed(0, rl.GamepadXboxButtonY) || rl.IsGamepadButtonPressed(0, rl.GamepadXboxButtonB) {
+	//	fmt.Println("find!!!")
+	//}
 	generateNextNote()
 	getMissMusicNote()
 	addScore()
