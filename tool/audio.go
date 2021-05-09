@@ -1,13 +1,16 @@
-package model
+package tool
 
-import rl "github.com/gen2brain/raylib-go/raylib"
+import (
+	"awesomeProject1/model"
+	rl "github.com/gen2brain/raylib-go/raylib"
+)
 
 var soundMap = make(map[string]rl.Sound)
 
 const AUDIO_DIR = "audio"
 
 // PlayMusicSheet Play the next music note of 'sheet' and advance the progress
-func PlayMusicSheet(sheet *MusicSheet) {
+func PlayMusicSheet(sheet *model.MusicSheet) {
 	if sheet.CurrentNode != nil {
 		playMusicNote(sheet.CurrentNode.Data)
 		sheet.CurrentNode = sheet.CurrentNode.Prev
@@ -15,7 +18,7 @@ func PlayMusicSheet(sheet *MusicSheet) {
 }
 
 // Play a sound of music note
-func playMusicNote(data NodeObject) {
+func playMusicNote(data model.NodeObject) {
 	note := data.(string)
 	if s, ok := soundMap[note]; ok {
 		rl.PlaySound(s)

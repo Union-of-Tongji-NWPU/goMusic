@@ -187,7 +187,7 @@ func addScore() {
 						CurrentMusicSheet = CurrentMusicSheet.Prev
 					}
 				}
-				//PlayMusic @XieQiJun
+				PlayMusicSheet(&sheet)
 				msg := fmt.Sprintf("+%v分", scoreIncr)
 				//@Todo:显示msg
 				ScoreSum += scoreIncr
@@ -248,36 +248,39 @@ func DrawGame() {
 	}
 	// --- music nodes ---
 	for line := 0; line < model.LINE; line++ {
-		//TODO
-		//for node := music_note_lists[line].head; node != NULL; node = node->prev {
-		//	rl.DrawRectangle(((MusicNote*)node->data)->x, ((MusicNote*)node->data)->y, ((MusicNote*)node->data)->width,
-		//		((MusicNote*)node->data)->height, ((MusicNote*)node->data)->color);
-		//}
+		for node := MusicNoteList[line].Head; node != nil; node = node.Prev {
+			rl.DrawRectangle(int32(node.Data.(model.MusicNote).X),
+				int32(node.Data.(model.MusicNote).Y),
+				int32(node.Data.(model.MusicNote).Width),
+				int32(node.Data.(model.MusicNote).Height),
+				node.Data.(model.MusicNote).Color)
+		}
 	}
 
 	// --- touch blocks ---
 	for line := 0; line < model.LINE; line++ {
-		//TODO
-		//rl.DrawRectangle(touch_blocks[line].x, touch_blocks[line].y, touch_blocks[line].width, touch_blocks[line].height,
-		//	touch_blocks[line].color)
-		//
-		//// text on touch block
-		//text := touch_blocks[line].key
-		//rl.DrawText(text, touch_blocks[line].x+TOUCH_BLOCK_FONT_SIZE/2.0,
-		//	touch_blocks[line].y+model.TOUCH_BLOCK_FONT_SIZE/2.0, model.TOUCH_BLOCK_FONT_SIZE, model.TOUCH_BLOCK_FONT_COLOR)
+		rl.DrawRectangle(int32(TouchNoteList[line].X),
+			int32(TouchNoteList[line].Y),
+			int32(TouchNoteList[line].Width),
+			int32(TouchNoteList[line].Height),
+			TouchNoteList[line].Color)
+
+		// text on touch block
+		text := TouchNoteList[line].Key
+		rl.DrawText(string(text), int32(TouchNoteList[line].X+model.TOUCH_BLOCK_FONT_SIZE/2.0),
+			int32(TouchNoteList[line].Y+model.TOUCH_BLOCK_FONT_SIZE/2.0), model.TOUCH_BLOCK_FONT_SIZE, model.TOUCH_BLOCK_FONT_COLOR)
 	}
 
 	// --- text animations ---
-	//TODO
-	//for node := animation_texts.head; node != NULL; node = node->prev {
-	//	textBox := (model.TextBox)node->data;
-	//	rl.DrawText(textBox->text, textBox->x, textBox->y, textBox->fontsize, textBox->fontcolor);
-	//}
+	for node := AnimationText.Head; node != nil; node = node.Prev {
+		textBox := node.Data.(model.TextBox)
+		rl.DrawText(textBox.Text, int32(textBox.X), int32(textBox.Y), int32(textBox.FontSize), textBox.FontColor)
+	}
 
 	// --- text of upper-left corner ---
-	rl.DrawText(fmt.Sprintf("SCORE: %d", score), model.UI_MARGIN, model.UI_MARGIN, model.UI_FONT_SIZE, model.LIGHTGRAY)
-	rl.DrawText(fmt.Sprintf("MISS: %d", miss), model.UI_MARGIN, model.UI_MARGIN+model.UI_FONT_SIZE, model.UI_FONT_SIZE, model.UI_FONT_COLOR)
-	rl.DrawText(fmt.Sprintf("SPEED: %.1f", speed_now()), model.UI_MARGIN, model.UI_MARGIN+model.UI_FONT_SIZE*2, model.UI_FONT_SIZE,
+	rl.DrawText(fmt.Sprintf("SCORE: %d", ScoreSum), model.UI_MARGIN, model.UI_MARGIN, model.UI_FONT_SIZE, model.LIGHTGRAY)
+	rl.DrawText(fmt.Sprintf("MISS: %d", MissCount), model.UI_MARGIN, model.UI_MARGIN+model.UI_FONT_SIZE, model.UI_FONT_SIZE, model.UI_FONT_COLOR)
+	rl.DrawText(fmt.Sprintf("SPEED: %.1f", speed()), model.UI_MARGIN, model.UI_MARGIN+model.UI_FONT_SIZE*2, model.UI_FONT_SIZE,
 		model.UI_FONT_COLOR)
 
 	rl.EndDrawing()
