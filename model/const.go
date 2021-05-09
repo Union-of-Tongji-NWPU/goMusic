@@ -4,7 +4,7 @@ import rl "github.com/gen2brain/raylib-go/raylib"
 
 const WINDOW_TITLE = "Music Tiles"
 const SCREEN_WIDTH = 800
-const SCREEN_HEIGHT = 800
+const SCREEN_HEIGHT = 600
 const LINE = 4
 const LINE_WIDTH = 100
 const MAX_MUSIC_NOTE_EACH_LINE = 100
@@ -53,12 +53,7 @@ const LEFT_MARGIN = (SCREEN_WIDTH - (LINE_WIDTH * LINE) - (MARGIN_BETWEEN_LINE *
 
 const RIGHT_MARGIN = (SCREEN_WIDTH - (LINE_WIDTH * LINE) - (MARGIN_BETWEEN_LINE * (LINE - 1))) / 2
 
-const KeyA = 65
-const KeyB = 66
-const KeyC = 67
-const KeyD = 68
-
-var KeyboardKey = [5]int32{KeyA, KeyB, KeyC, KeyD}
+var KeyboardKey = [5]int32{rl.KeyA, rl.KeyS, rl.KeyK, rl.KeyL}
 
 const XboxY = 5
 const XboxB = 6
@@ -66,10 +61,10 @@ const XboxA = 7
 const XboxX = 8
 
 var GamePadXboxKey = map[int32]int32{
-	KeyA: XboxX,
-	KeyB: XboxY,
-	KeyC: XboxA,
-	KeyD: XboxB,
+	rl.KeyA: XboxX,
+	rl.KeyS: XboxY,
+	rl.KeyK: XboxA,
+	rl.KeyL: XboxB,
 }
 
 var GamePadXboxKeyLetter = map[int32]string{
