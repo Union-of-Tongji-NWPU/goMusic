@@ -33,6 +33,9 @@ var CurrentScreen = 0 //当前界面
 const Title = 0
 const InGAME = 1
 const SongBox = 2
+const Credits = 3
+
+var CreditsScrollingPosY = model.SCREEN_HEIGHT + 20.0
 
 var OptionSelect = 0
 
@@ -56,6 +59,15 @@ func UpdateDrawFrame() {
 		DrawGame()
 	case SongBox:
 		DrawSongBox()
+	case Credits:
+		CreditsScrollingPosY -= 1
+		if CreditsScrollingPosY < float64(model.SCREEN_HEIGHT-len(model.CREDITS)*100-50) {
+			CreditsScrollingPosY = float64(model.SCREEN_HEIGHT - len(model.CREDITS)*100 - 50)
+		}
+		if rl.IsKeyPressed(rl.KeyEnter) {
+			CurrentScreen = Title
+		}
+		DrawCredits()
 	}
 }
 
@@ -364,6 +376,8 @@ func DrawMenu() {
 		OptionSelect--
 	}
 
+	println(OptionSelect)
+
 	if OptionSelect < 0 {
 		OptionSelect = 0
 	}
@@ -380,6 +394,9 @@ func DrawMenu() {
 		case ChooseMusicBox:
 			searchString = ""
 			CurrentScreen = SongBox
+		case ChooseCredit:
+			CreditsScrollingPosY = model.SCREEN_HEIGHT + 20.0
+			CurrentScreen = Credits
 		}
 	}
 
@@ -444,6 +461,7 @@ func DrawSongBox() {
 	}
 
 	rl.EndDrawing()
+
 }
 
 func DrawGame() {
@@ -521,4 +539,17 @@ func DrawGame() {
 
 	rl.EndDrawing()
 
+}
+
+func DrawCredits() {
+	rl.BeginDrawing()
+	rl.ClearBackground(rl.RayWhite)
+
+	fontSize := 40
+	fontSize2 := 30
+	for i := range model.CREDITS {
+		rl.DrawText(model.CREDITS[i][0], model.SCREEN_WIDTH/2-rl.MeasureText(model.CREDITS[i][0], int32(fontSize))/2, int32(CreditsScrollingPosY)+int32(100*i), int32(fontSize), model.TOUCH_BLOCK_BAD_COLOR)
+		rl.DrawText(model.CREDITS[i][1], model.SCREEN_WIDTH/2-rl.MeasureText(model.CREDITS[i][1], int32(fontSize2))/2, int32(CreditsScrollingPosY)+int32(100*i+50), int32(fontSize2), model.TOUCH_BLOCK_FONT_COLOR)
+	}
+	rl.EndDrawing()
 }
