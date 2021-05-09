@@ -19,7 +19,7 @@ import (
 var MusicSheetList = new(model.DoubleList)
 var CurrentMusicSheet = new(model.DoubleNode)
 var TouchNoteList = make([]model.TouchNote, model.LINE)
-var MusicNoteList = make([]*model.DoubleList, model.LINE)
+var MusicNoteList = make([]model.DoubleList, model.LINE)
 var AnimationText = new(model.DoubleList)
 var MissCount = 0
 var ScoreSum = 0 //总分
@@ -65,7 +65,7 @@ func generateNextNote() {
 		node := new(model.DoubleNode)
 		node = MusicNoteList[i].Head
 		for node != nil {
-			if minHeight < node.Data.(model.MusicNote).Y {
+			if minHeight > node.Data.(model.MusicNote).Y {
 				minHeight = node.Data.(model.MusicNote).Y
 			}
 			node = node.Prev
@@ -104,15 +104,11 @@ func getMissMusicNote() {
 	}
 }
 
-// if ((a.x + a.width <= b.x || a.y + a.height <= b.y) || (b.x + b.width <= a.x || b.y + b.height <= a.y))
-//        return 0.0f;
-//    else
-//        return fabsf((MAX(a.x, b.x) - MIN(a.x + a.width, b.x + b.width)) * (MAX(a.y, b.y) - MIN(a.y + a.height, b.y + b.height)));
 func calculateScore(rectangleA, rectangleB model.Rectangle) int {
 	if rectangleA.X+rectangleA.Width <= rectangleB.X || rectangleB.X+rectangleB.Width <= rectangleA.X {
 		return 0
 	}
-	if rectangleA.Y+rectangleA.Height <= rectangleB.Y || rectangleB.Y+rectangleB.Height <= rectangleB.Y {
+	if rectangleA.Y+rectangleA.Height <= rectangleB.Y || rectangleB.Y+rectangleB.Height <= rectangleA.Y {
 		return 0
 	}
 	x := math.Abs(math.Max(float64(rectangleA.X), float64(rectangleB.X)) - math.Min(float64(rectangleA.X+rectangleA.Width), float64(rectangleB.X+rectangleB.Width)))
@@ -158,7 +154,7 @@ func addScore() {
 					Height: musicNote.Height,
 				}
 				// 2.计算获得的分数
-				scoreIncr := calculateScore(touchRect, musicNoteRect)
+				scoreIncr = calculateScore(touchRect, musicNoteRect)
 				if scoreIncr > 0 {
 					bingoSuccess = true
 					MusicNoteList[i].Delete(node)
@@ -178,8 +174,8 @@ func addScore() {
 			}
 			// 4. 按成功
 			if bingoSuccess {
-				sheet := CurrentMusicSheet.Data.(model.MusicSheet)
-				if JudgeSheetEnded(&sheet) {
+				sheet := CurrentMusicSheet.Data.(*model.MusicSheet)
+				if JudgeSheetEnded(sheet) {
 					sheet.CurrentNode = sheet.List.Head
 					if CurrentMusicSheet.Prev == nil {
 						CurrentMusicSheet = MusicSheetList.Head
@@ -187,7 +183,7 @@ func addScore() {
 						CurrentMusicSheet = CurrentMusicSheet.Prev
 					}
 				}
-				PlayMusicSheet(&sheet)
+				PlayMusicSheet(sheet)
 				msg := fmt.Sprintf("+%v分", scoreIncr)
 				//@Todo:显示msg
 				fmt.Println(msg)
@@ -209,6 +205,7 @@ func updateNoteY() {
 		for node != nil {
 			musicNote := node.Data.(model.MusicNote)
 			musicNote.Y += speed()
+			node.Data = musicNote
 			node = node.Prev
 		}
 	}
@@ -250,6 +247,7 @@ func DrawGame() {
 	// --- music nodes ---
 	for line := 0; line < model.LINE; line++ {
 		for node := MusicNoteList[line].Head; node != nil; node = node.Prev {
+			//fmt.Print(strconv.Itoa(int(node.Data.(model.MusicNote).Y)))
 			rl.DrawRectangle(int32(node.Data.(model.MusicNote).X),
 				int32(node.Data.(model.MusicNote).Y),
 				int32(node.Data.(model.MusicNote).Width),

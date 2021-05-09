@@ -14,6 +14,8 @@ func LoadMusicSheetFromString(sheet *model.MusicSheet, str string) {
 	if sheet == nil {
 		sheet = new(model.MusicSheet)
 	}
+	sheet.List = new(model.DoubleList)
+	sheet.CurrentNode = nil
 	musicSheetList := strings.Fields(str)
 	for _, v := range musicSheetList {
 		sheet.List.Append(v)
@@ -33,11 +35,11 @@ func LoadMusicSheetFromFile(sheet *model.MusicSheet, fileName string) error {
 	return nil
 }
 
-func JudgeSheetEnded(sheet *model.MusicSheet) bool{
+func JudgeSheetEnded(sheet *model.MusicSheet) bool {
 	return sheet.CurrentNode == nil
 }
 
-func GetDefaultMusicSheet(sheet *model.MusicSheet){
-	LoadMusicSheetFromString(sheet,DEFAULT_MUSIC_SHEET)
+func GetDefaultMusicSheet(sheet *model.MusicSheet) {
+	LoadMusicSheetFromString(sheet, DEFAULT_MUSIC_SHEET)
 
 }
