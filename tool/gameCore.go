@@ -416,7 +416,8 @@ func DrawSongBox() {
 	rl.BeginDrawing()
 	//绘制输入框开始
 	rl.DrawText("input the song name", model.SCREEN_WIDTH/8, 10, 24, rl.Gray)
-	if rl.CheckCollisionPointRec(rl.GetMousePosition(), searchTextBox) {
+	focusOnTextBox := rl.CheckCollisionPointRec(rl.GetMousePosition(), searchTextBox)
+	if focusOnTextBox {
 		rl.DrawText("ENTER for search", 0.5*model.SCREEN_WIDTH, 10, 24, rl.DarkGray)
 		textColor = rl.Red
 		key := rl.GetKeyPressed()
@@ -463,7 +464,12 @@ func DrawSongBox() {
 	} else if rl.IsKeyPressed(rl.KeyUp) && CurrentChooseMusicIndex > 0 {
 		CurrentChooseMusicIndex--
 	}
-
+	if !focusOnTextBox {
+		if rl.IsKeyPressed(rl.KeyEnter) {
+			InitGame([]string{ProcessSong(model.ResourceDir + "/" + files[CurrentChooseMusicIndex].Name())})
+			CurrentScreen = InGAME
+		}
+	}
 	rl.EndDrawing()
 
 }
