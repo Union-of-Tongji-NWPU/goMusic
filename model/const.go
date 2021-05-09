@@ -61,8 +61,11 @@ const XboxB = 6
 const XboxA = 7
 const XboxX = 8
 
-const PreLimit = 5
-const PreWord = "Great!"
+const GreatLimit = 5
+const GreatWord = "Great!"
+
+const PerfectLimit = 7
+const PerfectWord = "Perfect!"
 
 var GamePadXboxKey = map[int32]int32{
 	rl.KeyA: XboxX,

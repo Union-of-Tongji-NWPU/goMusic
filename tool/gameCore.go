@@ -26,7 +26,7 @@ var MissCount = 0
 var ScoreSum = 0 //总分
 var FrameCount = 0
 var FramActionList = new(model.DoubleList)
-var PrefectNum = 0
+var SuccessiveNum = 0
 
 var CurrentScreen = 0 //当前界面
 const Title = 0
@@ -123,7 +123,7 @@ func getMissMusicNote() {
 			if musicNote.Y > model.SCREEN_HEIGHT {
 				MusicNoteList[i].Delete(node)
 				MissCount += 1
-				PrefectNum = 0
+				SuccessiveNum = 0
 				RegisterAnimateText(FrameCount+1, &model.TextBox{
 					X:         musicNote.X,
 					Y:         model.SCREEN_HEIGHT - model.MISSED_FONT_SIZE,
@@ -202,16 +202,24 @@ func addScore() {
 						TouchNoteList[i].Color = model.TOUCH_BLOCK_BAD_COLOR
 					}
 					if scoreIncr == 5 {
-						PrefectNum += 1
+						SuccessiveNum += 1
 					} else {
-						PrefectNum = 0
+						SuccessiveNum = 0
 					}
-					if PrefectNum >= model.PreLimit {
+					if SuccessiveNum >= model.PerfectLimit {
 						RegisterAnimateText(FrameCount+5, &model.TextBox{
 							X:         TouchNoteList[i].X,
 							Y:         TouchNoteList[i].Y,
 							FontSize:  model.SCORE_FONT_SIZE,
-							Text:      model.PreWord,
+							Text:      model.PerfectWord,
+							FontColor: model.GREAT_COLOR,
+						})
+					} else if SuccessiveNum >= model.GreatLimit {
+						RegisterAnimateText(FrameCount+5, &model.TextBox{
+							X:         TouchNoteList[i].X,
+							Y:         TouchNoteList[i].Y,
+							FontSize:  model.SCORE_FONT_SIZE,
+							Text:      model.GreatWord,
 							FontColor: model.GREAT_COLOR,
 						})
 					}
