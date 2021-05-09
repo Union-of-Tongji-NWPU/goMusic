@@ -374,6 +374,8 @@ func DrawMenu() {
 	if rl.IsKeyPressed(rl.KeyEnter) {
 		switch OptionSelect {
 		case ChooseStartGame:
+			//test
+			InitGame([]string{})
 			CurrentScreen = InGAME
 		case ChooseMusicBox:
 			searchString = ""
