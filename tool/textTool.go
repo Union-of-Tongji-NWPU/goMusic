@@ -8,31 +8,55 @@
 package tool
 
 import (
+	"math"
+
 	"awesomeProject1/model"
 )
 
-// 显示工具
-//void register_animate_text(unsigned int frame, const char* text, int fontsize, Color fontcolor, float start_x,
-//float start_y)
-//{
-//TextBox textbox = { .x = start_x, .y = start_y, .fontsize = fontsize, .text = strdup(text), .fontcolor = fontcolor };
-//
-//list_append_tail(&animation_texts, &textbox, sizeof(TextBox));
-//
-//float radians = randf(PI / 2 - PI / 6, PI / 2 + PI / 6); // 60 ~ 120 degrees
-//for (int i = 0; i < ANIMATE_TEXT_DURATION; ++i) {
-//__frame_register_animate_text_t data = {
-//.textbox = animation_texts.tail->data, .dx = -2 * cosf(radians), .dy = -2 * sinf(radians)
-//};
-//register_at_frame(frame + i, (void (*)(void*))__frame_register_animate_text, &data,
-//sizeof(__frame_register_animate_text_t));
-//}
-//
-//__frame_register_drop_animate_text_t _data = { .node = animation_texts.tail };
-//register_at_frame(frame + ANIMATE_TEXT_DURATION, (void (*)(void*))__frame_register_drop_animate_text, &_data,
-//sizeof(__frame_register_drop_animate_text_t));
-//}
+func RegisterAnimateText(frame int, text *model.TextBox) {
+	// 1. 扩展到待展示内
+	AnimationText.Append(text)
+	// 2. 确定展示角度
+	radians := math.Pi / 2
+	// 3. 逐个注册帧
+	for i := 0; i < model.ANIMATE_TEXT_DURATION; i++ {
+		data := &model.FrameRegisterText{
+			Text: AnimationText.Tail.Data.(*model.TextBox),
+			Dx:   -2 * math.Cos(radians),
+			Dy:   -2 * math.Sin(radians),
+		}
+		RegisterAtFrame(frame+i, data, ChangeTextPosition)
+	}
+	// 4. 删除文案
+	data := AnimationText.Tail
+	RegisterAtFrame(frame+model.ANIMATE_TEXT_DURATION, data, FrameDeleteText)
+}
 
-func RegisterAnimateText(frame int,text model.TextBox){
+// 注册到某一帧中
+func RegisterAtFrame(frame int, data interface{}, fun func(text interface{})) {
+	if frame < FrameCount {
+		return
+	}
+	registerAction := model.FrameRegisterAction{
+		Function: fun,
+		Frame:    frame,
+		Data:     data,
+	}
+	FramActionList.Append(registerAction)
+}
 
+func ChangeTextPosition(text interface{}) {
+	frameText := text.(*model.FrameRegisterText)
+	frameText.Text.X += float32(frameText.Dx)
+	frameText.Text.Y += float32(frameText.Dy)
+}
+
+func FrameDeleteText(text interface{}) {
+	node := text.(*model.DoubleNode)
+	AnimationText.Delete(node)
+}
+
+func ResetNodeColor(text interface{}) {
+	node := text.(*model.SetTouchBlockColor)
+	node.TouchNote.Color = node.Color
 }
