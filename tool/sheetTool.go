@@ -39,4 +39,5 @@ func JudgeSheetEnded(sheet *model.MusicSheet) bool{
 
 func GetDefaultMusicSheet(sheet *model.MusicSheet){
 	LoadMusicSheetFromString(sheet,DEFAULT_MUSIC_SHEET)
+
 }
