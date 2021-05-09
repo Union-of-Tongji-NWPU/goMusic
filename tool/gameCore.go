@@ -40,6 +40,13 @@ const ChooseStartGame = 0
 const ChooseMusicBox = 1
 const ChooseCredit = 2
 
+var searchTextBox = rl.Rectangle{
+	X:      10,
+	Y:      35,
+	Width:  model.SCREEN_WIDTH / 1.1,
+	Height: 30,
+}
+
 func UpdateDrawFrame() {
 	switch CurrentScreen {
 	case Title:
@@ -369,6 +376,7 @@ func DrawMenu() {
 		case ChooseStartGame:
 			CurrentScreen = InGAME
 		case ChooseMusicBox:
+			searchString = ""
 			CurrentScreen = SongBox
 		}
 	}
@@ -380,9 +388,35 @@ func DrawMenu() {
 var CurrentMusicName = ""
 var CurrentChooseMusicIndex = 0
 
+var textColor rl.Color
+var searchString string
+
 func DrawSongBox() {
 	files, _ := ioutil.ReadDir("./sheet")
 	rl.BeginDrawing()
+	//绘制输入框开始
+	rl.DrawText("input the song name", model.SCREEN_WIDTH/8, 10, 24, rl.Gray)
+	if rl.CheckCollisionPointRec(rl.GetMousePosition(), searchTextBox) {
+		rl.DrawText("ENTER for search", 0.5*model.SCREEN_WIDTH, 10, 24, rl.DarkGray)
+		textColor = rl.Red
+		key := rl.GetKeyPressed()
+		for key > 0 {
+			if key >= 32 && key <= 125 {
+				searchString += string(key)
+			}
+			key = rl.GetKeyPressed()
+		}
+		if rl.IsKeyPressed(rl.KeyBackspace) {
+			searchString = searchString[:len(searchString)-1]
+		}
+	} else {
+		textColor = rl.DarkGray
+	}
+	//绘制输入框结束
+
+	rl.DrawRectangleLines(int32(searchTextBox.X), int32(searchTextBox.Y), int32(searchTextBox.Width), int32(searchTextBox.Height), textColor)
+	rl.DrawText(searchString, int32(searchTextBox.X+5), int32(searchTextBox.Y+4), 24, rl.Maroon)
+
 	rl.ClearBackground(rl.RayWhite)
 
 	for idx, f := range files {
