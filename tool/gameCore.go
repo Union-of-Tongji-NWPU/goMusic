@@ -28,6 +28,27 @@ var FrameCount = 0
 var FramActionList = new(model.DoubleList)
 var PrefectNum = 0
 
+var CurrentScreen = 0 //当前界面
+const Title = 0
+const InGAME = 1
+const SongBox = 2
+
+var OptionSelect = 0
+
+const ChooseStartGame = 0
+const ChooseMusicBox = 1
+const ChooseCredit = 2
+
+func UpdateDrawFrame() {
+	switch CurrentScreen {
+	case 0:
+		DrawMenu()
+	case 1:
+		FlushGame()
+		DrawGame()
+	}
+}
+
 func InitGame(sheetFiles []string) {
 	for k, _ := range sheetFiles {
 		sheet := new(model.MusicSheet)
@@ -297,6 +318,52 @@ func FlushGame() {
 	updateNoteY()
 	FrameCount++
 	checkFrameAction()
+}
+
+func DrawMenu() {
+	rl.BeginDrawing()
+	rl.ClearBackground(rl.RayWhite)
+
+	var fontSize0 int32 = 30
+	var fontSize1 int32 = 30
+	var fontSize2 int32 = 30
+
+	switch OptionSelect {
+	case 0:
+		fontSize0 = 48
+	case 1:
+		fontSize1 = 48
+	case 2:
+		fontSize2 = 48
+	}
+	rl.DrawText("START GAME", 100, 100, fontSize0, model.TOUCH_BLOCK_FONT_COLOR)
+	rl.DrawText("SONG BOX", 100, 100+64, fontSize1, model.TOUCH_BLOCK_FONT_COLOR)
+	rl.DrawText("CREDIT", 100, 100+64+64, fontSize2, model.TOUCH_BLOCK_FONT_COLOR)
+
+	if rl.IsKeyPressed(rl.KeyDown) {
+		OptionSelect++
+	} else if rl.IsKeyPressed(rl.KeyUp) {
+		OptionSelect--
+	}
+
+	println(OptionSelect)
+
+	if OptionSelect < 0 {
+		OptionSelect = 0
+	}
+	if OptionSelect > 2 {
+		OptionSelect = 2
+	}
+
+	if rl.IsKeyPressed(rl.KeyEnter) {
+		switch OptionSelect {
+		case 0:
+			CurrentScreen = InGAME
+		}
+	}
+
+	rl.EndDrawing()
+
 }
 
 func DrawGame() {

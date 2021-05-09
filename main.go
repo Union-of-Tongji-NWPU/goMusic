@@ -15,8 +15,7 @@ func main() {
 	rl.SetTargetFPS(60)
 
 	for !rl.WindowShouldClose() {
-		tool.FlushGame()
-		tool.DrawGame()
+		tool.UpdateDrawFrame()
 	}
 	rl.CloseWindow()
 
