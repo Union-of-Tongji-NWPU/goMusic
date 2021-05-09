@@ -217,18 +217,23 @@ func addScore() {
 	}
 }
 
-func judgeGamePadPressed(key int32) bool {
+func judgeGamePadXbox() bool {
 	if rl.IsGamepadAvailable(rl.GamepadPlayer1) {
 		//目前只支持Xbox手柄
 		if strings.Contains(rl.GetGamepadName(rl.GamepadPlayer1), "Xbox") {
-			if rl.IsGamepadButtonPressed(rl.GamepadPlayer1, model.GamePadXboxKey[key]) {
-				return true
-			}
-		} else {
-			return false
+			return true
 		}
+		return false
 	}
 	return false
+}
+
+func judgeGamePadPressed(key int32) bool {
+	if judgeGamePadXbox() && rl.IsGamepadButtonPressed(rl.GamepadPlayer1, model.GamePadXboxKey[key]) {
+		return true
+	} else {
+		return false
+	}
 }
 
 func speed() float32 {
@@ -326,7 +331,17 @@ func DrawGame() {
 		// text on touch block
 		text := TouchNoteList[line].Key
 		rl.DrawText(string(text), int32(TouchNoteList[line].X+model.TOUCH_BLOCK_FONT_SIZE/2.0),
-			int32(TouchNoteList[line].Y+model.TOUCH_BLOCK_FONT_SIZE/2.0), model.TOUCH_BLOCK_FONT_SIZE, model.TOUCH_BLOCK_FONT_COLOR)
+			int32(TouchNoteList[line].Y+model.TOUCH_BLOCK_FONT_SIZE/2.0),
+			model.TOUCH_BLOCK_FONT_SIZE,
+			model.TOUCH_BLOCK_FONT_COLOR)
+		if judgeGamePadXbox() {
+			rl.DrawCircle(int32(TouchNoteList[line].X+model.TOUCH_BLOCK_FONT_SIZE*3),
+				int32(TouchNoteList[line].Y+TouchNoteList[line].Height/2.0), TouchNoteList[line].Height/2.5, rl.Pink)
+			rl.DrawText(model.GamePadXboxKeyLetter[model.GamePadXboxKey[TouchNoteList[line].Key]],
+				int32(TouchNoteList[line].X+model.TOUCH_BLOCK_FONT_SIZE*3-model.TOUCH_BLOCK_FONT_SIZE/3),
+				int32(TouchNoteList[line].Y+model.TOUCH_BLOCK_FONT_SIZE/2.0), model.TOUCH_BLOCK_FONT_SIZE,
+				model.TOUCH_BLOCK_FONT_COLOR)
+		}
 	}
 
 	// --- text animations ---

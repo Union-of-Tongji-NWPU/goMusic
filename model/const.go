@@ -71,3 +71,10 @@ var GamePadXboxKey = map[int32]int32{
 	KeyC: XboxA,
 	KeyD: XboxB,
 }
+
+var GamePadXboxKeyLetter = map[int32]string{
+	XboxX: "X",
+	XboxY: "Y",
+	XboxA: "A",
+	XboxB: "B",
+}
