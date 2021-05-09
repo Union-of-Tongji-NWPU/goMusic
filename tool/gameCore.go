@@ -409,6 +409,7 @@ var CurrentChooseMusicIndex = 0
 
 var textColor rl.Color
 var searchString string
+var notFoundFrame int
 
 func DrawSongBox() {
 	files, _ := ioutil.ReadDir("./sheet")
@@ -433,14 +434,11 @@ func DrawSongBox() {
 				InitGame([]string{ProcessSong(model.ResourceDir + "/" + searchString + ".txt")})
 				CurrentScreen = InGAME
 			} else {
-				RegisterAnimateText(FrameCount+1, &model.TextBox{
-					X:         0.8 * model.SCREEN_WIDTH,
-					Y:         10,
-					FontSize:  24,
-					FontColor: rl.Red,
-					Text:      "can't find",
-				})
+				notFoundFrame = FrameCount
 			}
+		}
+		if notFoundFrame+15 > FrameCount {
+			rl.DrawText("not found!", 0.8*model.SCREEN_WIDTH, 10, 24, rl.Red)
 		}
 	} else {
 		textColor = rl.DarkGray
