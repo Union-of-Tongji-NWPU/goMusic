@@ -25,7 +25,7 @@ func playMusicNote(data model.NodeObject) {
 	} else {
 		sound := loadMusicNoteSound(note)
 		soundMap[note] = sound
-		rl.PlaySound(s)
+		rl.PlaySound(sound)
 	}
 }
 

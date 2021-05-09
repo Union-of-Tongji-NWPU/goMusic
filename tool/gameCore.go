@@ -201,7 +201,6 @@ func addScore() {
 					Text:      msg,
 					FontColor: model.SCORE_FONT_COLOR,
 				})
-				fmt.Println(msg)
 				ScoreSum += scoreIncr
 			} else {
 				TouchNoteList[i].Color = model.TOUCH_BLOCK_MISTOUCH_COLOR

@@ -10,7 +10,7 @@ func main() {
 	rl.InitAudioDevice()
 	rl.InitWindow(model.SCREEN_WIDTH, model.SCREEN_HEIGHT, "sample:music")
 	//test
-	tool.InitGame([]string{"sheet/7-years-lukas-graham.txt"})
+	tool.InitGame([]string{"sheet/twinkle-twinkle-little-star-traditional.txt"})
 
 	rl.SetTargetFPS(60)
 
