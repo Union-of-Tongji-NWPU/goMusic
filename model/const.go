@@ -85,10 +85,10 @@ var GamePadXboxKeyLetter = map[int32]string{
 
 //定义Credits界面展示的内容
 var CREDITS = [][2]string{
-	{"GAME DESIGN", "Jun"},
-	{"GAME PROGRAMMING", "Jun"},
-	{"GAME ART", "Jun"},
-	{"GAME AUDIO", "Jun"},
+	{"GAME DESIGN", "ghl,cys"},
+	{"GAME PROGRAMMING", "cys,xqj,zoe,yl"},
+	{"GAME ART", "cys"},
+	{"GAME AUDIO", "xqj"},
 	{"POWERED BY", "Raylib"},
 	{"THANKS", "noobnotes.net for providing the music sheets."},
 	{"OUR TEAM", "Union Of Tongji&NWPU"},
