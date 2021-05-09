@@ -26,6 +26,7 @@ var MissCount = 0
 var ScoreSum = 0 //总分
 var FrameCount = 0
 var FramActionList = new(model.DoubleList)
+var PrefectNum = 0
 
 func InitGame(sheetFiles []string) {
 	for k, _ := range sheetFiles {
@@ -84,7 +85,7 @@ func generateNextNote() {
 			Y:      getYOfNote(minHeight),
 			Width:  model.MUSIC_NOTE_WIDTH,
 			Height: model.MUSIC_NOTE_HEIGHT,
-			Color:  model.MUSIC_NOTE_INIT_COLOR,
+			Color:  model.MUSIC_NOTE_INIT_COLOR[rand.Intn(5)],
 		}
 		MusicNoteList[selectLine].Append(musicNote)
 		minHeight = musicNote.Y
@@ -101,7 +102,7 @@ func getMissMusicNote() {
 			if musicNote.Y > model.SCREEN_HEIGHT {
 				MusicNoteList[i].Delete(node)
 				MissCount += 1
-				//@Todo： 显示Miss
+				PrefectNum = 0
 				RegisterAnimateText(FrameCount+1, &model.TextBox{
 					X:         musicNote.X,
 					Y:         model.SCREEN_HEIGHT - model.MISSED_FONT_SIZE,
@@ -179,6 +180,20 @@ func addScore() {
 					case 1:
 						TouchNoteList[i].Color = model.TOUCH_BLOCK_BAD_COLOR
 					}
+					if scoreIncr == 5 {
+						PrefectNum += 1
+					} else {
+						PrefectNum = 0
+					}
+					if PrefectNum >= model.PreLimit {
+						RegisterAnimateText(FrameCount+5, &model.TextBox{
+							X:         TouchNoteList[i].X,
+							Y:         TouchNoteList[i].Y,
+							FontSize:  model.SCORE_FONT_SIZE,
+							Text:      model.PreWord,
+							FontColor: model.GREAT_COLOR,
+						})
+					}
 				}
 			}
 			// 4. 按成功
@@ -203,6 +218,7 @@ func addScore() {
 					FontColor: model.SCORE_FONT_COLOR,
 				})
 				ScoreSum += scoreIncr
+
 			} else {
 				TouchNoteList[i].Color = model.TOUCH_BLOCK_MISTOUCH_COLOR
 			}

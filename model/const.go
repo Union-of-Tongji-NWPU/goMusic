@@ -12,7 +12,7 @@ const MARGIN_BETWEEN_LINE = 10
 const MUSIC_NOTE_WIDTH = LINE_WIDTH
 const MUSIC_NOTE_HEIGHT = 160
 
-var MUSIC_NOTE_INIT_COLOR = rl.DarkGray
+var MUSIC_NOTE_INIT_COLOR [5]rl.Color = [5]rl.Color{rl.DarkGray, rl.Orange, rl.Green, rl.Red, rl.Blue}
 var TOUCH_BLOCK_INIT_COLOR = rl.LightGray
 var TOUCH_BLOCK_FONT_COLOR = rl.DarkGray
 var TOUCH_BLOCK_PERFECT_COLOR = rl.Green
@@ -24,6 +24,7 @@ var UI_FONT_COLOR = rl.LightGray
 var MISSED_FONT_COLOR = rl.DarkGray
 var SCORE_FONT_COLOR = rl.Gray
 var SIDE_LINE_COLOR = rl.LightGray
+var GREAT_COLOR = rl.Red
 
 const MUSIC_NOTE_AREA = MUSIC_NOTE_WIDTH * MUSIC_NOTE_HEIGHT
 
@@ -64,6 +65,9 @@ const XboxY = 5
 const XboxB = 6
 const XboxA = 7
 const XboxX = 8
+
+const PreLimit = 5
+const PreWord = "Great!"
 
 var GamePadXboxKey = map[int32]int32{
 	KeyA: XboxX,
