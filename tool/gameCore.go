@@ -10,6 +10,7 @@ package tool
 import (
 	"fmt"
 	rl "github.com/gen2brain/raylib-go/raylib"
+	"io/ioutil"
 	"math"
 	"math/rand"
 	"strings"
@@ -26,7 +27,7 @@ var MissCount = 0
 var ScoreSum = 0 //总分
 var FrameCount = 0
 var FramActionList = new(model.DoubleList)
-var PrefectNum = 0
+var SuccessiveNum = 0
 
 var CurrentScreen = 0 //当前界面
 const Title = 0
@@ -42,13 +43,22 @@ const ChooseStartGame = 0
 const ChooseMusicBox = 1
 const ChooseCredit = 2
 
+var searchTextBox = rl.Rectangle{
+	X:      10,
+	Y:      35,
+	Width:  model.SCREEN_WIDTH / 1.1,
+	Height: 30,
+}
+
 func UpdateDrawFrame() {
 	switch CurrentScreen {
-	case 0:
+	case Title:
 		DrawMenu()
-	case 1:
+	case InGAME:
 		FlushGame()
 		DrawGame()
+	case SongBox:
+		DrawSongBox()
 	case 3:
 		CreditsScrollingPosY -= 1
 		if CreditsScrollingPosY < float64(model.SCREEN_HEIGHT-len(model.CREDITS)*100-50) {
@@ -135,7 +145,7 @@ func getMissMusicNote() {
 			if musicNote.Y > model.SCREEN_HEIGHT {
 				MusicNoteList[i].Delete(node)
 				MissCount += 1
-				PrefectNum = 0
+				SuccessiveNum = 0
 				RegisterAnimateText(FrameCount+1, &model.TextBox{
 					X:         musicNote.X,
 					Y:         model.SCREEN_HEIGHT - model.MISSED_FONT_SIZE,
@@ -214,16 +224,24 @@ func addScore() {
 						TouchNoteList[i].Color = model.TOUCH_BLOCK_BAD_COLOR
 					}
 					if scoreIncr == 5 {
-						PrefectNum += 1
+						SuccessiveNum += 1
 					} else {
-						PrefectNum = 0
+						SuccessiveNum = 0
 					}
-					if PrefectNum >= model.PreLimit {
+					if SuccessiveNum >= model.PerfectLimit {
 						RegisterAnimateText(FrameCount+5, &model.TextBox{
 							X:         TouchNoteList[i].X,
 							Y:         TouchNoteList[i].Y,
 							FontSize:  model.SCORE_FONT_SIZE,
-							Text:      model.PreWord,
+							Text:      model.PerfectWord,
+							FontColor: model.GREAT_COLOR,
+						})
+					} else if SuccessiveNum >= model.GreatLimit {
+						RegisterAnimateText(FrameCount+5, &model.TextBox{
+							X:         TouchNoteList[i].X,
+							Y:         TouchNoteList[i].Y,
+							FontSize:  model.SCORE_FONT_SIZE,
+							Text:      model.GreatWord,
 							FontColor: model.GREAT_COLOR,
 						})
 					}
@@ -369,12 +387,72 @@ func DrawMenu() {
 
 	if rl.IsKeyPressed(rl.KeyEnter) {
 		switch OptionSelect {
-		case 0:
+		case ChooseStartGame:
+			//test
+			InitGame([]string{})
 			CurrentScreen = InGAME
+		case ChooseMusicBox:
+			searchString = ""
+			CurrentScreen = SongBox
 		case 2:
 			CreditsScrollingPosY = model.SCREEN_HEIGHT + 20.0
 			CurrentScreen = Credits
 		}
+	}
+
+	rl.EndDrawing()
+
+}
+
+var CurrentMusicName = ""
+var CurrentChooseMusicIndex = 0
+
+var textColor rl.Color
+var searchString string
+
+func DrawSongBox() {
+	files, _ := ioutil.ReadDir("./sheet")
+	rl.BeginDrawing()
+	//绘制输入框开始
+	rl.DrawText("input the song name", model.SCREEN_WIDTH/8, 10, 24, rl.Gray)
+	if rl.CheckCollisionPointRec(rl.GetMousePosition(), searchTextBox) {
+		rl.DrawText("ENTER for search", 0.5*model.SCREEN_WIDTH, 10, 24, rl.DarkGray)
+		textColor = rl.Red
+		key := rl.GetKeyPressed()
+		for key > 0 {
+			if key >= 32 && key <= 125 {
+				searchString += string(key)
+			}
+			key = rl.GetKeyPressed()
+		}
+		if rl.IsKeyPressed(rl.KeyBackspace) {
+			searchString = searchString[:len(searchString)-1]
+		}
+	} else {
+		textColor = rl.DarkGray
+	}
+	//绘制输入框结束
+
+	rl.DrawRectangleLines(int32(searchTextBox.X), int32(searchTextBox.Y), int32(searchTextBox.Width), int32(searchTextBox.Height), textColor)
+	rl.DrawText(searchString, int32(searchTextBox.X+5), int32(searchTextBox.Y+4), 24, rl.Maroon)
+
+	rl.ClearBackground(rl.RayWhite)
+
+	for idx, f := range files {
+		if idx == CurrentChooseMusicIndex {
+			rl.DrawText(f.Name(), 100, int32(100+(idx*30)), 24, rl.Red)
+		} else {
+			rl.DrawText(f.Name(), 100, int32(100+(idx*30)), 24, model.TOUCH_BLOCK_FONT_COLOR)
+		case 2:
+			CreditsScrollingPosY = model.SCREEN_HEIGHT + 20.0
+			CurrentScreen = Credits
+		}
+	}
+
+	if rl.IsKeyPressed(rl.KeyDown) && CurrentChooseMusicIndex < len(files)-1 {
+		CurrentChooseMusicIndex++
+	} else if rl.IsKeyPressed(rl.KeyUp) && CurrentChooseMusicIndex > 0 {
+		CurrentChooseMusicIndex--
 	}
 
 	rl.EndDrawing()
