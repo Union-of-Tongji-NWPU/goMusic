@@ -7,24 +7,24 @@
  **/
 package model
 
-// 双向链表
+// DoubleList 双向链表
 type DoubleList struct {
 	Size uint
 	Head *DoubleNode
 	Tail *DoubleNode
 }
 
-// 节点数据
+// NodeObject 节点数据
 type NodeObject interface{}
 
-// 双链表节点
+// DoubleNode 双链表节点
 type DoubleNode struct {
 	Data NodeObject
 	Prev *DoubleNode
 	Next *DoubleNode
 }
 
-// tail->head
+// Append tail->head
 func (list *DoubleList) Append(data interface{}) {
 	node := new(DoubleNode)
 	node.Data = data
@@ -56,12 +56,12 @@ func (list *DoubleList) Delete(node *DoubleNode) {
 	list.Size--
 }
 
-func (list *DoubleList) DeleteHead(node *DoubleNode)  {
-	oldHead :=list.Head
-	if list.Size ==1{
-		list.Head =nil
-		list.Tail =nil
-	}else{
+func (list *DoubleList) DeleteHead(node *DoubleNode) {
+	oldHead := list.Head
+	if list.Size == 1 {
+		list.Head = nil
+		list.Tail = nil
+	} else {
 		list.Head = oldHead.Prev
 		list.Head.Next = nil
 	}
