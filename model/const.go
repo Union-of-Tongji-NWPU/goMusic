@@ -50,6 +50,8 @@ const SCORE_FONT_SIZE = 22
 const UI_MARGIN = 5
 const ANIMATE_TEXT_DURATION = 30 // 动画停留的帧数
 
+const ResourceDir = "sheet"
+
 const LEFT_MARGIN = (SCREEN_WIDTH - (LINE_WIDTH * LINE) - (MARGIN_BETWEEN_LINE * (LINE - 1))) / 2
 
 const RIGHT_MARGIN = (SCREEN_WIDTH - (LINE_WIDTH * LINE) - (MARGIN_BETWEEN_LINE * (LINE - 1))) / 2

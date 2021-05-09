@@ -1,6 +1,7 @@
 package tool
 
 import (
+	"awesomeProject1/model"
 	"fmt"
 	"github.com/PuerkitoBio/goquery"
 	"github.com/gocolly/colly"
@@ -10,8 +11,6 @@ import (
 	"regexp"
 	"strings"
 )
-
-const resourceDir = "sheet"
 
 func GetSong(song string) bool {
 	song = ProcessSong(song)
@@ -23,9 +22,8 @@ func GetSong(song string) bool {
 }
 
 func findSong(song string) bool {
-	file, err := os.Open(resourceDir + "/" + song + ".txt")
+	file, err := os.Open(model.ResourceDir + "/" + song + ".txt")
 	if err != nil {
-		panic(err)
 		return false
 	}
 	defer file.Close()
@@ -47,7 +45,7 @@ func ProcessSong(song string) string {
 func clawSong(song string) bool {
 
 	// 存储文件名
-	fName := resourceDir + "/" + song + ".txt"
+	fName := model.ResourceDir + "/" + song + ".txt"
 	file, err := os.Create(fName)
 	if err != nil {
 		log.Fatalf("创建文件失败 %q: %s\n", fName, err)

@@ -413,7 +413,7 @@ func DrawSongBox() {
 		}
 		if rl.IsKeyPressed(rl.KeyEnter) {
 			if GetSong(searchString) {
-				InitGame([]string{ProcessSong(searchString)})
+				InitGame([]string{ProcessSong(model.ResourceDir + "/" + searchString + ".txt")})
 				CurrentScreen = InGAME
 			} else {
 				rl.DrawText("can't find", 0.8*model.SCREEN_WIDTH, 10, 24, rl.Red)
