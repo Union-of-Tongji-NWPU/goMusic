@@ -190,6 +190,7 @@ func addScore() {
 				PlayMusicSheet(&sheet)
 				msg := fmt.Sprintf("+%v分", scoreIncr)
 				//@Todo:显示msg
+				fmt.Println(msg)
 				ScoreSum += scoreIncr
 			}
 		}
