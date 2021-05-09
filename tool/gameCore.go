@@ -59,7 +59,7 @@ func UpdateDrawFrame() {
 		DrawGame()
 	case SongBox:
 		DrawSongBox()
-	case 3:
+	case Credits:
 		CreditsScrollingPosY -= 1
 		if CreditsScrollingPosY < float64(model.SCREEN_HEIGHT-len(model.CREDITS)*100-50) {
 			CreditsScrollingPosY = float64(model.SCREEN_HEIGHT - len(model.CREDITS)*100 - 50)
@@ -394,7 +394,7 @@ func DrawMenu() {
 		case ChooseMusicBox:
 			searchString = ""
 			CurrentScreen = SongBox
-		case 2:
+		case ChooseCredit:
 			CreditsScrollingPosY = model.SCREEN_HEIGHT + 20.0
 			CurrentScreen = Credits
 		}
@@ -443,9 +443,6 @@ func DrawSongBox() {
 			rl.DrawText(f.Name(), 100, int32(100+(idx*30)), 24, rl.Red)
 		} else {
 			rl.DrawText(f.Name(), 100, int32(100+(idx*30)), 24, model.TOUCH_BLOCK_FONT_COLOR)
-		case 2:
-			CreditsScrollingPosY = model.SCREEN_HEIGHT + 20.0
-			CurrentScreen = Credits
 		}
 	}
 
