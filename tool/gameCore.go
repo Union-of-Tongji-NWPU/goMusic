@@ -418,7 +418,7 @@ func DrawSongBox() {
 	rl.DrawText("input the song name", model.SCREEN_WIDTH/8, 10, 24, rl.Gray)
 	focusOnTextBox := rl.CheckCollisionPointRec(rl.GetMousePosition(), searchTextBox)
 	if focusOnTextBox {
-		rl.DrawText("ENTER for search", 0.5*model.SCREEN_WIDTH, 10, 24, rl.DarkGray)
+		rl.DrawText("ENTER for search internet", 0.5*model.SCREEN_WIDTH, 10, 24, rl.DarkGray)
 		textColor = rl.Red
 		key := rl.GetKeyPressed()
 		for key > 0 {
@@ -520,17 +520,18 @@ func DrawGame() {
 			TouchNoteList[line].Color)
 
 		// text on touch block
-		text := TouchNoteList[line].Key
-		rl.DrawText(string(text), int32(TouchNoteList[line].X+model.TOUCH_BLOCK_FONT_SIZE/2.0),
-			int32(TouchNoteList[line].Y+model.TOUCH_BLOCK_FONT_SIZE/2.0),
-			model.TOUCH_BLOCK_FONT_SIZE,
-			model.TOUCH_BLOCK_FONT_COLOR)
 		if judgeGamePadXbox() {
 			rl.DrawCircle(int32(TouchNoteList[line].X+model.TOUCH_BLOCK_FONT_SIZE*3),
 				int32(TouchNoteList[line].Y+TouchNoteList[line].Height/2.0), TouchNoteList[line].Height/2.5, rl.Pink)
 			rl.DrawText(model.GamePadXboxKeyLetter[model.GamePadXboxKey[TouchNoteList[line].Key]],
 				int32(TouchNoteList[line].X+model.TOUCH_BLOCK_FONT_SIZE*3-model.TOUCH_BLOCK_FONT_SIZE/3),
 				int32(TouchNoteList[line].Y+model.TOUCH_BLOCK_FONT_SIZE/2.0), model.TOUCH_BLOCK_FONT_SIZE,
+				model.TOUCH_BLOCK_FONT_COLOR)
+		} else {
+			text := TouchNoteList[line].Key
+			rl.DrawText(string(text), int32(TouchNoteList[line].X+model.TOUCH_BLOCK_FONT_SIZE/2.0),
+				int32(TouchNoteList[line].Y+model.TOUCH_BLOCK_FONT_SIZE/2.0),
+				model.TOUCH_BLOCK_FONT_SIZE,
 				model.TOUCH_BLOCK_FONT_COLOR)
 		}
 	}
