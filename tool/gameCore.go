@@ -24,6 +24,7 @@ var AnimationText = new(model.DoubleList)
 var MissCount = 0
 var ScoreSum = 0 //总分
 var FrameCount = 0
+var FramActionList = new(model.DoubleList)
 
 func InitGame(sheetFiles []string) {
 	for k, _ := range sheetFiles {
@@ -100,6 +101,13 @@ func getMissMusicNote() {
 				MusicNoteList[i].Delete(node)
 				MissCount += 1
 				//@Todo： 显示Miss
+				RegisterAnimateText(FrameCount+1, &model.TextBox{
+					X:         musicNote.X,
+					Y:         model.SCREEN_HEIGHT - model.MISSED_FONT_SIZE,
+					FontSize:  model.MISSED_FONT_SIZE,
+					FontColor: model.MISSED_FONT_COLOR,
+					Text:      "MISS",
+				})
 				break
 			}
 			node = node.Prev
@@ -169,9 +177,6 @@ func addScore() {
 						TouchNoteList[i].Color = model.TOUCH_BLOCK_OK_COLOR
 					case 1:
 						TouchNoteList[i].Color = model.TOUCH_BLOCK_BAD_COLOR
-					case 0:
-						TouchNoteList[i].Color = model.TOUCH_BLOCK_MISTOUCH_COLOR
-
 					}
 				}
 			}
@@ -187,11 +192,27 @@ func addScore() {
 					}
 				}
 				PlayMusicSheet(sheet)
-				msg := fmt.Sprintf("+%v分", scoreIncr)
+				msg := fmt.Sprintf("+%v", scoreIncr)
 				//@Todo:显示msg
+				RegisterAnimateText(FrameCount+1, &model.TextBox{
+					X:         TouchNoteList[i].X,
+					Y:         TouchNoteList[i].Y,
+					FontSize:  model.SCORE_FONT_SIZE,
+					Text:      msg,
+					FontColor: model.SCORE_FONT_COLOR,
+				})
 				fmt.Println(msg)
 				ScoreSum += scoreIncr
+			} else {
+				TouchNoteList[i].Color = model.TOUCH_BLOCK_MISTOUCH_COLOR
 			}
+
+			// 5. 10帧后改回颜色
+			data := &model.SetTouchBlockColor{
+				TouchNote: &TouchNoteList[i],
+				Color:     model.TOUCH_BLOCK_INIT_COLOR,
+			}
+			RegisterAtFrame(FrameCount+10, data, ResetNodeColor)
 		}
 	}
 }
@@ -214,12 +235,28 @@ func updateNoteY() {
 	}
 }
 
+func checkFrameAction() {
+	// run previously registered functions
+	node := FramActionList.Head
+	for node != nil {
+		action := node.Data.(model.FrameRegisterAction)
+		if action.Frame == FrameCount {
+			action.Function(action.Data)
+			FramActionList.Delete(node)
+			node = FramActionList.Head
+			continue
+		}
+		node = node.Prev
+	}
+}
+
 func FlushGame() {
 	generateNextNote()
 	getMissMusicNote()
 	addScore()
 	updateNoteY()
 	FrameCount++
+	checkFrameAction()
 }
 
 func DrawGame() {
@@ -275,7 +312,7 @@ func DrawGame() {
 
 	// --- text animations ---
 	for node := AnimationText.Head; node != nil; node = node.Prev {
-		textBox := node.Data.(model.TextBox)
+		textBox := node.Data.(*model.TextBox)
 		rl.DrawText(textBox.Text, int32(textBox.X), int32(textBox.Y), int32(textBox.FontSize), textBox.FontColor)
 	}
 
