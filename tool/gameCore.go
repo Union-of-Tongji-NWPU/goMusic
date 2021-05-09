@@ -28,7 +28,10 @@ var FrameCount = 0
 func InitGame(sheetFiles []string) {
 	for k, _ := range sheetFiles {
 		sheet := new(model.MusicSheet)
-		LoadMusicSheetFromFile(sheet, sheetFiles[k])
+		err := LoadMusicSheetFromFile(sheet, sheetFiles[k])
+		if err != nil {
+			panic(err)
+		}
 		MusicSheetList.Append(sheet)
 	}
 	if len(sheetFiles) == 0 {
