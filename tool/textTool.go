@@ -10,7 +10,7 @@ package tool
 import (
 	"math"
 
-	"awesomeProject1/model"
+	"musicDance/model"
 )
 
 func RegisterAnimateText(frame int, text *model.TextBox) {

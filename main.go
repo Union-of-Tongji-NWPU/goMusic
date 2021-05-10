@@ -1,14 +1,14 @@
 package main
 
 import (
-	"awesomeProject1/model"
-	"awesomeProject1/tool"
 	"github.com/gen2brain/raylib-go/raylib"
+	"musicDance/model"
+	"musicDance/tool"
 )
 
 func main() {
 	rl.InitAudioDevice()
-	rl.InitWindow(model.SCREEN_WIDTH, model.SCREEN_HEIGHT, "sample:music")
+	rl.InitWindow(model.SCREEN_WIDTH, model.SCREEN_HEIGHT, model.WINDOW_TITLE)
 
 	rl.SetTargetFPS(60)
 

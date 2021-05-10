@@ -2,7 +2,7 @@ package model
 
 import rl "github.com/gen2brain/raylib-go/raylib"
 
-const WINDOW_TITLE = "Music Tiles"
+const WINDOW_TITLE = "Music Dance"
 const SCREEN_WIDTH = 800
 const SCREEN_HEIGHT = 600
 const LINE = 4

@@ -15,7 +15,7 @@ import (
 	"math/rand"
 	"strings"
 
-	"awesomeProject1/model"
+	"musicDance/model"
 )
 
 var MusicSheetList = new(model.DoubleList)
@@ -375,8 +375,6 @@ func DrawMenu() {
 	} else if rl.IsKeyPressed(rl.KeyUp) {
 		OptionSelect--
 	}
-
-	println(OptionSelect)
 
 	if OptionSelect < 0 {
 		OptionSelect = 0

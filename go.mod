@@ -1,4 +1,4 @@
-module awesomeProject1
+module musicDance
 
 go 1.15
 

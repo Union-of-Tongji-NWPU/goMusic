@@ -1,12 +1,12 @@
 package tool
 
 import (
-	"awesomeProject1/model"
 	"fmt"
 	"github.com/PuerkitoBio/goquery"
 	"github.com/gocolly/colly"
 	"github.com/gocolly/colly/extensions"
 	"log"
+	"musicDance/model"
 	"os"
 	"regexp"
 	"strings"
@@ -61,7 +61,6 @@ func clawSong(song string) bool {
 	var result string
 	collector.OnError(func(response *colly.Response, err error) {
 		log.Println(err.Error())
-		fmt.Println("test")
 		result = ""
 	})
 

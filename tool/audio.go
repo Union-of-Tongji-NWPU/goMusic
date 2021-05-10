@@ -1,8 +1,8 @@
 package tool
 
 import (
-	"awesomeProject1/model"
 	rl "github.com/gen2brain/raylib-go/raylib"
+	"musicDance/model"
 )
 
 var soundMap = make(map[string]rl.Sound)

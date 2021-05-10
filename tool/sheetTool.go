@@ -5,7 +5,7 @@ import (
 	"os"
 	"strings"
 
-	"awesomeProject1/model"
+	"musicDance/model"
 )
 
 const DEFAULT_MUSIC_SHEET = "c4 c4 g4 g4 a4 a4 a4 a4 g4 f4 f4 e4 e4 d4 d4 c4 g4 g4 g4 f4 f4 e4 e4 e4 d4 c4 g4 g4 g4 f4 f4 f4 f4 e4 e4 e4 d4"
