@@ -1,10 +1,3 @@
-/**
- * @Author $
- * @Description //TODO $
- * @Date $ $
- * @Param $
- * @return $
- **/
 package tool
 
 import (
@@ -37,7 +30,7 @@ const Credits = 3
 
 var CreditsScrollingPosY = model.SCREEN_HEIGHT + 20.0
 
-var OptionSelect = 0
+var OptionSelect = 0 //主菜单选项
 
 const ChooseStartGame = 0
 const ChooseMusicBox = 1
@@ -49,6 +42,8 @@ var searchTextBox = rl.Rectangle{
 	Width:  model.SCREEN_WIDTH / 1.1,
 	Height: 30,
 }
+
+//ui场景选择
 
 func UpdateDrawFrame() {
 	switch CurrentScreen {
@@ -350,6 +345,8 @@ func FlushGame() {
 	checkFrameAction()
 }
 
+//主菜单绘制
+
 func DrawMenu() {
 	rl.BeginDrawing()
 	rl.ClearBackground(rl.RayWhite)
@@ -408,6 +405,8 @@ var CurrentChooseMusicIndex = 0
 var textColor rl.Color
 var searchString string
 var notFoundFrame int
+
+//音乐选择界面
 
 func DrawSongBox() {
 	files, _ := ioutil.ReadDir("./sheet")
@@ -549,6 +548,8 @@ func DrawGame() {
 	rl.EndDrawing()
 
 }
+
+//credit界面
 
 func DrawCredits() {
 	rl.BeginDrawing()
